@@ -1,17 +1,12 @@
 <?php
-require_once 'vendor/autoload.php'; // подключаем PHPWord
+require_once 'vendor/autoload.php';
 
-use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\IOFactory;
+use TCPDF;
 
-// Формируем Word-документ
-$word = new PhpWord();
-$section = $word->addSection();
-
+// Получаем данные
 $fio = $_POST['fio'] ?? 'аноним';
-$section->addTitle("Опрос - $fio", 1);
+$filename = 'Анкета_' . preg_replace('/[^a-zA-Zа-яА-Я0-9_]/u', '_', $fio) . '.pdf';
 
-// Вопросы
 $questions = [
     "Препараты снижения веса", "Препараты гормональные", "Почки", "Печень",
     "Злокач. и доброкач. новообразования", "Лактация", "Системные заболевания крови",
@@ -23,27 +18,32 @@ $questions = [
     "Индивидуальные противопоказания"
 ];
 
+// Создаём PDF
+$pdf = new TCPDF();
+$pdf->AddPage();
+$pdf->SetFont('dejavusans', '', 12);
+
+$pdf->Write(0, "Анкета: $fio\n\n");
+
+// Выводим каждый вопрос и ответ
 foreach ($questions as $i => $q) {
     $answer = $_POST['q' . ($i + 1)] ?? '-';
-    $section->addText("• $q");
-    $section->addText("Ответ: $answer\n", ['italic' => true]);
+    $pdf->MultiCell(0, 10, "• $q\nОтвет: $answer", 0, 'L', 0, 1, '', '', true);
 }
 
-// Сохраняем файл
-$filename = 'Отчёт_' . preg_replace('/[^a-zA-Zа-яА-Я0-9_]/u', '_', $fio) . '.docx';
-$path = __DIR__ . "/$filename";
-$writer = IOFactory::createWriter($word, 'Word2007');
-$writer->save($path);
+// Сохраняем PDF
+$path = __DIR__ . '/' . $filename;
+$pdf->Output($path, 'F');
 
-// Отправляем файл в Telegram
-$bot_token = '7967646516:AAEi9XwevABI6gcGkykF_CcSABKXSITL4WY';
-$chat_id = '1280511210';
+// Отправляем PDF в Telegram
+$bot_token = '...'; // твой токен
+$chat_id = '...';   // твой chat_id
 
 $send_url = "https://api.telegram.org/bot$bot_token/sendDocument";
 $post_fields = [
     'chat_id' => $chat_id,
     'document' => new CURLFile(realpath($path)),
-    'caption' => "Опрос от $fio"
+    'caption' => "PDF-отчёт по анкете: $fio"
 ];
 
 $ch = curl_init();
@@ -51,10 +51,10 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type:multipart/form-data"]);
 curl_setopt($ch, CURLOPT_URL, $send_url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
-$result = curl_exec($ch);
+curl_exec($ch);
 curl_close($ch);
 
-// Перенаправляем пользователя
+// Перенаправляем
 header('Location: thanks.html');
 exit();
 ?>
