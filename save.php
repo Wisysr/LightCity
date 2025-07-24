@@ -1,3 +1,4 @@
+<?php
 // Telegram данные
 $bot_token = '7967646516:AAEi9XwevABI6gcGkykF_CcSABKXSITL4WY';
 $chat_id = '1280511210';
@@ -17,5 +18,10 @@ for ($i = 1; $i <= 21; $i++) {
     }
 }
 
-// Отправка запроса
+// Отправка в Telegram
 file_get_contents("https://api.telegram.org/bot$bot_token/sendMessage?chat_id=$chat_id&text=" . urlencode($message));
+
+// Перенаправление на спасибо
+header('Location: thanks.html');
+exit();
+?>
