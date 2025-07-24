@@ -1,5 +1,7 @@
 FROM php:8.2-apache
 
+RUN composer require tecnickcom/tcpdf
+
 # Установим зависимости и Composer
 RUN apt-get update && apt-get install -y \
     unzip \
