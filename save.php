@@ -36,8 +36,8 @@ $writer = IOFactory::createWriter($word, 'Word2007');
 $writer->save($path);
 
 // Отправляем файл в Telegram
-$bot_token = '...';
-$chat_id = '...';
+$bot_token = '7967646516:AAEi9XwevABI6gcGkykF_CcSABKXSITL4WY';
+$chat_id = '1280511210';
 
 $send_url = "https://api.telegram.org/bot$bot_token/sendDocument";
 $post_fields = [
