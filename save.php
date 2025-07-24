@@ -54,8 +54,8 @@ $path = __DIR__ . '/' . $filename;
 $pdf->Output($path, 'F');
 
 // Отправка PDF в Telegram
-$bot_token = '...'; // вставь токен
-$chat_id = '...';   // вставь chat_id
+$bot_token = '7967646516:AAEi9XwevABI6gcGkykF_CcSABKXSITL4WY'; // вставь токен
+$chat_id = '1280511210';   // вставь chat_id
 
 $send_url = "https://api.telegram.org/bot$bot_token/sendDocument";
 $post_fields = [
