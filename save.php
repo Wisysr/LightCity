@@ -12,6 +12,7 @@ $questions = [
     "Возраст" => $_POST['age'] ?? '-',
     "Рост (см)" => $_POST['height'] ?? '-',
     "Вес (кг)" => $_POST['weight'] ?? '-',
+    "Телефон" => $_POST['phone'] ?? '-',
     "Препараты снижения веса" => $_POST['q1'] ?? '-',
     "Препараты гормональные" => $_POST['q2'] ?? '-',
     "Почки" => $_POST['q3'] ?? '-',
@@ -38,7 +39,7 @@ $questions = [
 // Создаём PDF
 $pdf = new TCPDF();
 $pdf->AddPage();
-$pdf->SetFont('dejavusans', '', 12);
+$pdf->SetFont('dejavusans', '', 10); // уменьшенный шрифт
 $pdf->Write(0, "Анкета: $fio
 
 ");
